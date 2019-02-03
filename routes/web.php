@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/', 'PersonController@index');
+Route::post('/store-person', 'PersonController@store')->name('person.store');
