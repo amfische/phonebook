@@ -14,17 +14,8 @@ class PersonController extends Controller
      */
     public function index()
     {
-        return view('persons.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
+        $persons = Person::all();
+        return view('persons.index', ['persons' => $persons]);
     }
 
     /**
@@ -39,7 +30,9 @@ class PersonController extends Controller
             'first_name' => 'bail|required',
             'last_name' => 'bail|required',
             'title' => 'bail|required',
-            'phone' => 'bail|required'
+            'phone' => 'bail|required|numeric|size:10'
+        ], [
+            'phone.size' => 'The phone number must be 10 digits'
         ]);
 
         $person = new Person();
@@ -49,30 +42,8 @@ class PersonController extends Controller
         $person->phone = $request->phone;
         $person->save();
 
-        return response('success', 200);
+        return response()->json([ 'status' => $person->first_name . ' ' . $person->last_name . ' was successfully added to the phonebook!'], 200);
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -84,7 +55,23 @@ class PersonController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'first_name' => 'bail|required',
+            'last_name' => 'bail|required',
+            'title' => 'bail|required',
+            'phone' => 'bail|required|numeric|size:10'
+        ], [
+            'phone.size' => 'The phone number must be 10 digits'
+        ]);
+
+        $person = Person::find($id);
+        $person->first_name = $request->first_name;
+        $person->last_name = $request->last_name;
+        $person->title = $request->title;
+        $person->phone = $request->phone;
+        $person->save();
+
+        return response()->json([ 'status' => 'Contact successfully updated!'], 200);
     }
 
     /**

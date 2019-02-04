@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="pbc-errors" class="alert alert-danger d-none" role="alert"><ul></ul></div>
+        <div id="pbc-errors" class="alert alert-danger d-none" role="alert"><ul class="m-0"></ul></div>
         <form action="{{ action('PersonController@store') }}" method="post">
           @csrf
           <div class="form-group">
@@ -27,9 +27,9 @@
             <label for="pbc-phone">Phone Number</label>
             <input type="text" name="phone" class="form-control" id="pbc-phone">
           </div>
-          <button type="button" name="image" class="btn btn-warning">img upload</button>
+          {{-- <button type="button" name="image" class="btn btn-warning">img upload</button> --}}
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id="haha">Add Person</button>
+            <button type="submit" class="btn btn-primary" id="pbc-submit">Add Person</button>
           </div>
         </form>
       </div>

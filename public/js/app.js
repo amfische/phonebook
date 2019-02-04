@@ -36490,13 +36490,22 @@ if (token) {
 /***/ (function(module, exports) {
 
 $(document).ready(function () {
-  $('#haha').click(function (e) {
+  // create modal
+  $('#pbc-submit').click(function (e) {
     e.preventDefault();
     axios.post('/store-person', {
       first_name: $('#pbc-first_name').val(),
       last_name: $('#pbc-last_name').val(),
       title: $('#pbc-title').val(),
       phone: $('#pbc-phone').val()
+    }).then(function (response) {
+      $('#pbc-first_name').val('');
+      $('#pbc-last_name').val('');
+      $('#pbc-title').val('');
+      $('#pbc-phone').val('');
+      $('#createModal').modal('hide');
+      $('#status-alert').removeClass('d-none');
+      $('#status-alert').prepend("<span>".concat(response.data.status, "</span>"));
     }).catch(function (errors) {
       $('#pbc-errors').removeClass('d-none');
 
@@ -36507,6 +36516,53 @@ $(document).ready(function () {
   });
   $('#createModal').on('hidden.bs.modal', function (e) {
     $('#pbc-errors').addClass('d-none');
+  }); // edit modal
+
+  $('#editModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+
+    var person = button.data('info'); // Extract info from data-* attributes
+
+    var modal = $(this);
+    modal.find('#pbe-id').val(person.id);
+    modal.find('#pbe-first_name').val(person.first_name);
+    modal.find('#pbe-last_name').val(person.last_name);
+    modal.find('#pbe-title').val(person.title);
+    modal.find('#pbe-phone').val(person.phone);
+  });
+  $('#pbe-submit').click(function (e) {
+    e.preventDefault();
+    var id = $('#pbe-id').val();
+    axios.post('/update-person/' + id, {
+      first_name: $('#pbe-first_name').val(),
+      last_name: $('#pbe-last_name').val(),
+      title: $('#pbe-title').val(),
+      phone: $('#pbe-phone').val()
+    }).then(function (response) {
+      $('#name-' + id).text($('#pbe-first_name').val() + ' ' + $('#pbe-last_name').val());
+      $('#title-' + id).text($('#pbe-title').val());
+      $('#phone-' + id).text($('#pbe-phone').val());
+      $('#pbe-first_name').val('');
+      $('#pbe-last_name').val('');
+      $('#pbe-title').val('');
+      $('#pbe-phone').val('');
+      $('#editModal').modal('hide');
+      $('#status-alert').removeClass('d-none');
+      $('#status-alert').prepend("<span>".concat(response.data.status, "</span>"));
+    }).catch(function (errors) {
+      $('#pbe-errors').removeClass('d-none');
+
+      for (var _e2 in errors.response.data.errors) {
+        $('#pbe-errors ul').append("<li>".concat(errors.response.data.errors[_e2], "</li>"));
+      }
+    });
+  });
+  $('#editModal').on('hidden.bs.modal', function (e) {
+    $('#pbe-errors').addClass('d-none');
+  }); // status alert
+
+  $('#status-alert button').on('click', function () {
+    $('#status-alert').addClass('d-none');
   });
 });
 
