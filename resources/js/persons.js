@@ -10,24 +10,39 @@ $(document).ready(function() {
 			phone: $('#pbc-phone').val()
 		})
 		.then(response => {
-			$('#pbc-first_name').val('');
-			$('#pbc-last_name').val('');
-			$('#pbc-title').val('');
-			$('#pbc-phone').val('');
+			const person = response.data.person
+			$('main').append(
+				`
+				<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black">
+					<img src="https://via.placeholder.com/65" alt="placeholder image">
+					<div class="d-flex align-items-center justify-content-between flex-grow-1 px-4">
+						<div>
+							<h2 id="name-${person.id}" class="m-0">${person.first_name} ${person.last_name}</h2>
+							<p id="title-${person.id}" class="m-0">${person.title}</p>
+						</div>
+						<p id="phone-${person.id}" class="m-0 px-5" style="font-size: 2rem;">${person.formatted_phone}</p>
+					</div>
+					<div>
+						<button class="btn btn-sm btn-info mx-2 px-4" data-toggle="modal" data-target="#editModal" data-info="${person}">edit</button>
+						<button class="btn btn-sm btn-danger mx-2 px-4">delete</button>
+					</div>
+				</div>
+				`)
+
+			clearModal('create')
 			$('#createModal').modal('hide');
+
+			$('#status-alert .message').empty();
+			$('#status-alert').prepend(`<span class="message">${response.data.status}</span>`);
 			$('#status-alert').removeClass('d-none');
-			$('#status-alert').prepend(`<span>${response.data.status}</span>`);
 		})
 		.catch(errors => {
+			$('#pbc-errors ul').empty();
 			$('#pbc-errors').removeClass('d-none');
 			for (let e in errors.response.data.errors) {
 				$('#pbc-errors ul').append(`<li>${errors.response.data.errors[e]}</li>`);
 			}
 		})
-	})
-
-	$('#createModal').on('hidden.bs.modal', (e) => {
-		$('#pbc-errors').addClass('d-none');
 	})
 
 	// edit modal
@@ -52,20 +67,19 @@ $(document).ready(function() {
 			phone: $('#pbe-phone').val()
 		})
 		.then(response => {
-			$('#name-' + id).text($('#pbe-first_name').val() + ' ' +  $('#pbe-last_name').val() );
-			$('#title-' + id).text($('#pbe-title').val());
-			$('#phone-' + id).text($('#pbe-phone').val());
+			$('#name-' + id).text(`${response.data.person.first_name} ${response.data.person.last_name}`);
+			$('#title-' + id).text(response.data.person.title);
+			$('#phone-' + id).text(response.data.person.formatted_phone);
 
-			$('#pbe-first_name').val('');
-			$('#pbe-last_name').val('');
-			$('#pbe-title').val('');
-			$('#pbe-phone').val('');
-
+			clearModal('edit')
 			$('#editModal').modal('hide');
+
+			$('#status-alert .message').empty();
+			$('#status-alert').prepend(`<span class="message">${response.data.status}</span>`);
 			$('#status-alert').removeClass('d-none');
-			$('#status-alert').prepend(`<span>${response.data.status}</span>`);
 		})
 		.catch(errors => {
+			$('#pbe-errors ul').empty();
 			$('#pbe-errors').removeClass('d-none');
 			for (let e in errors.response.data.errors) {
 				$('#pbe-errors ul').append(`<li>${errors.response.data.errors[e]}</li>`);
@@ -73,14 +87,33 @@ $(document).ready(function() {
 		})
 	})
 
+	$('#createModal').on('hidden.bs.modal', (e) => {
+		$('#pbc-errors').addClass('d-none');
+		$('#pbc-errors ul').empty();
+	})
+
 	$('#editModal').on('hidden.bs.modal', (e) => {
 		$('#pbe-errors').addClass('d-none');
+		$('#pbe-errors ul').empty();
 	})
+
+	function clearModal(type) {
+		if (type === 'create') {
+			$('#pbc-first_name').val('');
+			$('#pbc-last_name').val('');
+			$('#pbc-title').val('');
+			$('#pbc-phone').val('');
+		} else if (type === 'edit') {
+			$('#pbe-first_name').val('');
+			$('#pbe-last_name').val('');
+			$('#pbe-title').val('');
+			$('#pbe-phone').val('');
+		}
+	}
 
 	// status alert
 	$('#status-alert button').on('click', () => {
 		$('#status-alert').addClass('d-none');
 	})
-
 
 })

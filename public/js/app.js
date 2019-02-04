@@ -36499,23 +36499,21 @@ $(document).ready(function () {
       title: $('#pbc-title').val(),
       phone: $('#pbc-phone').val()
     }).then(function (response) {
-      $('#pbc-first_name').val('');
-      $('#pbc-last_name').val('');
-      $('#pbc-title').val('');
-      $('#pbc-phone').val('');
+      var person = response.data.person;
+      $('main').append("\n\t\t\t\t<div class=\"media align-items-center justify-content-between pb-3 mb-5\" style=\"border-bottom: 1px solid black\">\n\t\t\t\t\t<img src=\"https://via.placeholder.com/65\" alt=\"placeholder image\">\n\t\t\t\t\t<div class=\"d-flex align-items-center justify-content-between flex-grow-1 px-4\">\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t<h2 id=\"name-".concat(person.id, "\" class=\"m-0\">").concat(person.first_name, " ").concat(person.last_name, "</h2>\n\t\t\t\t\t\t\t<p id=\"title-").concat(person.id, "\" class=\"m-0\">").concat(person.title, "</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p id=\"phone-").concat(person.id, "\" class=\"m-0 px-5\" style=\"font-size: 2rem;\">").concat(person.formatted_phone, "</p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<button class=\"btn btn-sm btn-info mx-2 px-4\" data-toggle=\"modal\" data-target=\"#editModal\" data-info=\"").concat(person, "\">edit</button>\n\t\t\t\t\t\t<button class=\"btn btn-sm btn-danger mx-2 px-4\">delete</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t"));
+      clearModal('create');
       $('#createModal').modal('hide');
+      $('#status-alert .message').empty();
+      $('#status-alert').prepend("<span class=\"message\">".concat(response.data.status, "</span>"));
       $('#status-alert').removeClass('d-none');
-      $('#status-alert').prepend("<span>".concat(response.data.status, "</span>"));
     }).catch(function (errors) {
+      $('#pbc-errors ul').empty();
       $('#pbc-errors').removeClass('d-none');
 
       for (var _e in errors.response.data.errors) {
         $('#pbc-errors ul').append("<li>".concat(errors.response.data.errors[_e], "</li>"));
       }
     });
-  });
-  $('#createModal').on('hidden.bs.modal', function (e) {
-    $('#pbc-errors').addClass('d-none');
   }); // edit modal
 
   $('#editModal').on('show.bs.modal', function (event) {
@@ -36539,17 +36537,16 @@ $(document).ready(function () {
       title: $('#pbe-title').val(),
       phone: $('#pbe-phone').val()
     }).then(function (response) {
-      $('#name-' + id).text($('#pbe-first_name').val() + ' ' + $('#pbe-last_name').val());
-      $('#title-' + id).text($('#pbe-title').val());
-      $('#phone-' + id).text($('#pbe-phone').val());
-      $('#pbe-first_name').val('');
-      $('#pbe-last_name').val('');
-      $('#pbe-title').val('');
-      $('#pbe-phone').val('');
+      $('#name-' + id).text("".concat(response.data.person.first_name, " ").concat(response.data.person.last_name));
+      $('#title-' + id).text(response.data.person.title);
+      $('#phone-' + id).text(response.data.person.formatted_phone);
+      clearModal('edit');
       $('#editModal').modal('hide');
+      $('#status-alert .message').empty();
+      $('#status-alert').prepend("<span class=\"message\">".concat(response.data.status, "</span>"));
       $('#status-alert').removeClass('d-none');
-      $('#status-alert').prepend("<span>".concat(response.data.status, "</span>"));
     }).catch(function (errors) {
+      $('#pbe-errors ul').empty();
       $('#pbe-errors').removeClass('d-none');
 
       for (var _e2 in errors.response.data.errors) {
@@ -36557,9 +36554,29 @@ $(document).ready(function () {
       }
     });
   });
+  $('#createModal').on('hidden.bs.modal', function (e) {
+    $('#pbc-errors').addClass('d-none');
+    $('#pbc-errors ul').empty();
+  });
   $('#editModal').on('hidden.bs.modal', function (e) {
     $('#pbe-errors').addClass('d-none');
-  }); // status alert
+    $('#pbe-errors ul').empty();
+  });
+
+  function clearModal(type) {
+    if (type === 'create') {
+      $('#pbc-first_name').val('');
+      $('#pbc-last_name').val('');
+      $('#pbc-title').val('');
+      $('#pbc-phone').val('');
+    } else if (type === 'edit') {
+      $('#pbe-first_name').val('');
+      $('#pbe-last_name').val('');
+      $('#pbe-title').val('');
+      $('#pbe-phone').val('');
+    }
+  } // status alert
+
 
   $('#status-alert button').on('click', function () {
     $('#status-alert').addClass('d-none');

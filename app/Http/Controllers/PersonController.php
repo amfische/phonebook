@@ -15,6 +15,9 @@ class PersonController extends Controller
     public function index()
     {
         $persons = Person::all();
+        foreach ($persons as $p) {
+            $p->formatted_phone = Person::formatPhoneNumber($p->phone);
+        }
         return view('persons.index', ['persons' => $persons]);
     }
 
@@ -30,9 +33,9 @@ class PersonController extends Controller
             'first_name' => 'bail|required',
             'last_name' => 'bail|required',
             'title' => 'bail|required',
-            'phone' => 'bail|required|numeric|size:10'
+            'phone' => 'bail|required|numeric|digits:10'
         ], [
-            'phone.size' => 'The phone number must be 10 digits'
+            'phone.digits' => 'The phone number must be 10 digits'
         ]);
 
         $person = new Person();
@@ -42,7 +45,9 @@ class PersonController extends Controller
         $person->phone = $request->phone;
         $person->save();
 
-        return response()->json([ 'status' => $person->first_name . ' ' . $person->last_name . ' was successfully added to the phonebook!'], 200);
+        $person->formatted_phone = Person::formatPhoneNumber($person->phone);
+
+        return response()->json([ 'status' => $person->first_name . ' ' . $person->last_name . ' was successfully added to the phonebook!', 'person' => $person], 200);
 
     }
 
@@ -59,9 +64,9 @@ class PersonController extends Controller
             'first_name' => 'bail|required',
             'last_name' => 'bail|required',
             'title' => 'bail|required',
-            'phone' => 'bail|required|numeric|size:10'
+            'phone' => 'bail|required|numeric|digits:10'
         ], [
-            'phone.size' => 'The phone number must be 10 digits'
+            'phone.digits' => 'The phone number must be 10 digits'
         ]);
 
         $person = Person::find($id);
@@ -71,7 +76,9 @@ class PersonController extends Controller
         $person->phone = $request->phone;
         $person->save();
 
-        return response()->json([ 'status' => 'Contact successfully updated!'], 200);
+        $person->formatted_phone = Person::formatPhoneNumber($person->phone);
+
+        return response()->json([ 'status' => 'Contact successfully updated!', 'person' => $person], 200);
     }
 
     /**
