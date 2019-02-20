@@ -23,7 +23,16 @@ $(document).ready(function() {
 						<p id="phone-${person.id}" class="m-0 px-5" style="font-size: 2rem;">${person.formatted_phone}</p>
 					</div>
 					<div>
-						<button class="btn btn-sm btn-info mx-2 px-4" data-toggle="modal" data-target="#editModal" data-info="${person}">edit</button>
+						<button 
+							class="btn btn-sm btn-info mx-2 px-4" 
+							data-toggle="modal" data-target="#editModal" 
+							data-id="${ person.id }"
+							data-fn="${ person.first_name }"
+							data-ln="${ person.last_name }"
+							data-title="${ person.title }"
+							data-phone="${ person.phone }">
+							edit
+						</button>
 						<button class="btn btn-sm btn-danger mx-2 px-4">delete</button>
 					</div>
 				</div>
@@ -35,6 +44,8 @@ $(document).ready(function() {
 			$('#status-alert .message').empty();
 			$('#status-alert').prepend(`<span class="message">${response.data.status}</span>`);
 			$('#status-alert').removeClass('d-none');
+
+			$('main > .alert').addClass('d-none');
 		})
 		.catch(errors => {
 			$('#pbc-errors ul').empty();
@@ -48,13 +59,14 @@ $(document).ready(function() {
 	// edit modal
 	$('#editModal').on('show.bs.modal', function (event) {
 	  var button = $(event.relatedTarget) // Button that triggered the modal
-	  var person = button.data('info') // Extract info from data-* attributes
+	  // var person = typeof button.data('info') === 'string' ? JSON.parse(button.data('info')) : button.data('info') // Extract info from data-* attributes // newly created entries are stringified
 	  var modal = $(this)
-	  modal.find('#pbe-id').val(person.id);
-	  modal.find('#pbe-first_name').val(person.first_name);
-	  modal.find('#pbe-last_name').val(person.last_name);
-	  modal.find('#pbe-title').val(person.title);
-	  modal.find('#pbe-phone').val(person.phone);
+
+	  modal.find('#pbe-id').val(button.data('id'));
+	  modal.find('#pbe-first_name').val(button.data('fn'));
+	  modal.find('#pbe-last_name').val(button.data('ln'));
+	  modal.find('#pbe-title').val(button.data('title'));
+	  modal.find('#pbe-phone').val(button.data('phone'));
 	})
 
 		$('#pbe-submit').click((e) => {
@@ -70,6 +82,11 @@ $(document).ready(function() {
 			$('#name-' + id).text(`${response.data.person.first_name} ${response.data.person.last_name}`);
 			$('#title-' + id).text(response.data.person.title);
 			$('#phone-' + id).text(response.data.person.formatted_phone);
+
+			$('#edit-btn_' + id).data('fn', response.data.person.first_name)
+			$('#edit-btn_' + id).data('ln', response.data.person.last_name)
+			$('#edit-btn_' + id).data('title', response.data.person.title)
+			$('#edit-btn_' + id).data('phone', response.data.person.phone)
 
 			clearModal('edit')
 			$('#editModal').modal('hide');

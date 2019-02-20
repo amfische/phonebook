@@ -15,7 +15,7 @@
 	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#createModal">create</button>
 </div>
 
-<main role="main" class="mt-5">
+<main role="main" class="mt-5 pt-5">
 	@if(count($persons) === 0)
 		<div class="alert alert-info">
 			Looks like you don't have any contacts.. go make some friends!
@@ -32,7 +32,16 @@
 				<p id="{{ 'phone-' . $person->id }}" class="m-0 px-5" style="font-size: 2rem;">{{ $person->formatted_phone }}</p>
 			</div>
 			<div>
-				<button class="btn btn-sm btn-info mx-2 px-4" data-toggle="modal" data-target="#editModal" data-info="{{ $person }}">edit</button>
+				<button 
+					class="btn btn-sm btn-info mx-2 px-4" id="{{ 'edit-btn_' . $person->id }}"
+					data-toggle="modal" data-target="#editModal" 
+					data-id="{{ $person->id }}"
+					data-fn="{{ $person->first_name }}"
+					data-ln="{{ $person->last_name }}"
+					data-title="{{ $person->title }}"
+					data-phone="{{ $person->phone }}">
+					edit
+				</button>
 				<button class="btn btn-sm btn-danger mx-2 px-4">delete</button>
 			</div>
 		</div>

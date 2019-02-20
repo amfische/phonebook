@@ -8,6 +8,15 @@
         </button>
       </div>
       <div class="modal-body">
+        {{-- @if ($errors->any())
+          <div id="pbc-errors" class="alert alert-danger" role="alert">
+            <ul class="m-0">
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif --}}
         <div id="pbc-errors" class="alert alert-danger d-none" role="alert"><ul class="m-0"></ul></div>
         <form action="{{ action('PersonController@store') }}" method="post">
           @csrf
