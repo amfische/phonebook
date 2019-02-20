@@ -22,7 +22,7 @@
 		</div>
 	@endif
 	@foreach($persons as $person)
-		<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black">
+		<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black" id="{{ 'contact-block_' . $person->id }}">
 			<img src="https://via.placeholder.com/65" alt="placeholder image">
 			<div class="d-flex align-items-center justify-content-between flex-grow-1 px-4">
 				<div>
@@ -42,7 +42,14 @@
 					data-phone="{{ $person->phone }}">
 					edit
 				</button>
-				<button class="btn btn-sm btn-danger mx-2 px-4">delete</button>
+				<button 
+					class="btn btn-sm btn-danger mx-2 px-4" id="{{ 'delete-btn_' . $person->id }}"
+					data-toggle="modal" data-target="#deleteModal" 
+					data-id="{{ $person->id }}" 
+					data-fn="{{ $person->first_name }}" 
+					data-ln="{{ $person->last_name }}">
+					delete
+				</button>
 			</div>
 		</div>
 	@endforeach
@@ -51,5 +58,6 @@
 
 @include('persons.modals.create')
 @include('persons.modals.edit')
+@include('persons.modals.delete')
 
 @endsection

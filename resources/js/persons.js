@@ -13,7 +13,7 @@ $(document).ready(function() {
 			const person = response.data.person
 			$('main').append(
 				`
-				<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black">
+				<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black" id="contact-block_${person.id}">
 					<img src="https://via.placeholder.com/65" alt="placeholder image">
 					<div class="d-flex align-items-center justify-content-between flex-grow-1 px-4">
 						<div>
@@ -33,7 +33,14 @@ $(document).ready(function() {
 							data-phone="${ person.phone }">
 							edit
 						</button>
-						<button class="btn btn-sm btn-danger mx-2 px-4">delete</button>
+						<button 
+							class="btn btn-sm btn-danger mx-2 px-4" 
+							data-toggle="modal" data-target="#deleteModal" 
+							data-id="${ person.id }" 
+							data-fn="${ person.first_name }" 
+							data-ln="${ person.last_name }">
+							delete
+						</button>
 					</div>
 				</div>
 				`)
@@ -58,18 +65,18 @@ $(document).ready(function() {
 
 	// edit modal
 	$('#editModal').on('show.bs.modal', function (event) {
-	  var button = $(event.relatedTarget) // Button that triggered the modal
+	  var button = event.relatedTarget // Button that triggered the modal
 	  // var person = typeof button.data('info') === 'string' ? JSON.parse(button.data('info')) : button.data('info') // Extract info from data-* attributes // newly created entries are stringified
 	  var modal = $(this)
 
-	  modal.find('#pbe-id').val(button.data('id'));
-	  modal.find('#pbe-first_name').val(button.data('fn'));
-	  modal.find('#pbe-last_name').val(button.data('ln'));
-	  modal.find('#pbe-title').val(button.data('title'));
-	  modal.find('#pbe-phone').val(button.data('phone'));
+	  modal.find('#pbe-id').val(button.dataset.id);
+	  modal.find('#pbe-first_name').val(button.dataset.fn);
+	  modal.find('#pbe-last_name').val(button.dataset.ln);
+	  modal.find('#pbe-title').val(button.dataset.title);
+	  modal.find('#pbe-phone').val(button.dataset.phone);
 	})
 
-		$('#pbe-submit').click((e) => {
+	$('#pbe-submit').click((e) => {
 		e.preventDefault();
 		let id = $('#pbe-id').val()
 		axios.post('/update-person/' + id, {
@@ -83,10 +90,14 @@ $(document).ready(function() {
 			$('#title-' + id).text(response.data.person.title);
 			$('#phone-' + id).text(response.data.person.formatted_phone);
 
-			$('#edit-btn_' + id).data('fn', response.data.person.first_name)
-			$('#edit-btn_' + id).data('ln', response.data.person.last_name)
-			$('#edit-btn_' + id).data('title', response.data.person.title)
-			$('#edit-btn_' + id).data('phone', response.data.person.phone)
+			$('#edit-btn_' + id).attr('data-fn', response.data.person.first_name)
+			$('#edit-btn_' + id).attr('data-ln', response.data.person.last_name)
+			$('#edit-btn_' + id).attr('data-title', response.data.person.title)
+			$('#edit-btn_' + id).attr('data-phone', response.data.person.phone)
+
+			$('#delete-btn_' + id).attr('data-id', response.data.person.id)
+			$('#delete-btn_' + id).attr('data-fn', response.data.person.first_name)
+			$('#delete-btn_' + id).attr('data-ln', response.data.person.last_name)
 
 			clearModal('edit')
 			$('#editModal').modal('hide');
@@ -101,6 +112,31 @@ $(document).ready(function() {
 			for (let e in errors.response.data.errors) {
 				$('#pbe-errors ul').append(`<li>${errors.response.data.errors[e]}</li>`);
 			}
+		})
+	})
+
+	// delete modal
+	$('#deleteModal').on('show.bs.modal', function(event) {
+		var button = event.relatedTarget // Button that triggered the modal
+	  var modal = $(this)
+	  var message = `<p>Are you sure you want to remove <strong>${button.dataset.fn} ${button.dataset.ln}</strong> from your phonebook?</p>`
+	  modal.find('.modal-body').empty();
+	  modal.find('.modal-body').prepend(message);
+	  modal.find('#pbd-id').val(button.dataset.id)
+	})
+
+	$('#pbd-submit').click((e) => {
+		let id = $('#pbd-id').val()
+		axios.delete('/delete-person/' + id)
+		.then(response => {
+			$('#deleteModal').modal('hide');
+			$('#contact-block_' + id).remove();
+			$('#status-alert .message').empty();
+			$('#status-alert').prepend(`<span class="message">${response.data.status}</span>`);
+			$('#status-alert').removeClass('d-none');
+		})
+		.catch(() => {
+
 		})
 	})
 

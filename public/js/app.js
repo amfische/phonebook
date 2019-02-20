@@ -36499,9 +36499,8 @@ $(document).ready(function () {
       title: $('#pbc-title').val(),
       phone: $('#pbc-phone').val()
     }).then(function (response) {
-      // window.location.reload()
       var person = response.data.person;
-      $('main').append("\n\t\t\t\t<div class=\"media align-items-center justify-content-between pb-3 mb-5\" style=\"border-bottom: 1px solid black\">\n\t\t\t\t\t<img src=\"https://via.placeholder.com/65\" alt=\"placeholder image\">\n\t\t\t\t\t<div class=\"d-flex align-items-center justify-content-between flex-grow-1 px-4\">\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t<h2 id=\"name-".concat(person.id, "\" class=\"m-0\">").concat(person.first_name, " ").concat(person.last_name, "</h2>\n\t\t\t\t\t\t\t<p id=\"title-").concat(person.id, "\" class=\"m-0\">").concat(person.title, "</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p id=\"phone-").concat(person.id, "\" class=\"m-0 px-5\" style=\"font-size: 2rem;\">").concat(person.formatted_phone, "</p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<button \n\t\t\t\t\t\t\tclass=\"btn btn-sm btn-info mx-2 px-4\" \n\t\t\t\t\t\t\tdata-toggle=\"modal\" data-target=\"#editModal\" \n\t\t\t\t\t\t\tdata-id=\"").concat(person.id, "\"\n\t\t\t\t\t\t\tdata-fn=\"").concat(person.first_name, "\"\n\t\t\t\t\t\t\tdata-ln=\"").concat(person.last_name, "\"\n\t\t\t\t\t\t\tdata-title=\"").concat(person.title, "\"\n\t\t\t\t\t\t\tdata-phone=\"").concat(person.phone, "\">\n\t\t\t\t\t\t\tedit\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<button class=\"btn btn-sm btn-danger mx-2 px-4\">delete</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t"));
+      $('main').append("\n\t\t\t\t<div class=\"media align-items-center justify-content-between pb-3 mb-5\" style=\"border-bottom: 1px solid black\" id=\"contact-block_".concat(person.id, "\">\n\t\t\t\t\t<img src=\"https://via.placeholder.com/65\" alt=\"placeholder image\">\n\t\t\t\t\t<div class=\"d-flex align-items-center justify-content-between flex-grow-1 px-4\">\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t<h2 id=\"name-").concat(person.id, "\" class=\"m-0\">").concat(person.first_name, " ").concat(person.last_name, "</h2>\n\t\t\t\t\t\t\t<p id=\"title-").concat(person.id, "\" class=\"m-0\">").concat(person.title, "</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p id=\"phone-").concat(person.id, "\" class=\"m-0 px-5\" style=\"font-size: 2rem;\">").concat(person.formatted_phone, "</p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<button \n\t\t\t\t\t\t\tclass=\"btn btn-sm btn-info mx-2 px-4\" \n\t\t\t\t\t\t\tdata-toggle=\"modal\" data-target=\"#editModal\" \n\t\t\t\t\t\t\tdata-id=\"").concat(person.id, "\"\n\t\t\t\t\t\t\tdata-fn=\"").concat(person.first_name, "\"\n\t\t\t\t\t\t\tdata-ln=\"").concat(person.last_name, "\"\n\t\t\t\t\t\t\tdata-title=\"").concat(person.title, "\"\n\t\t\t\t\t\t\tdata-phone=\"").concat(person.phone, "\">\n\t\t\t\t\t\t\tedit\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<button \n\t\t\t\t\t\t\tclass=\"btn btn-sm btn-danger mx-2 px-4\" \n\t\t\t\t\t\t\tdata-toggle=\"modal\" data-target=\"#deleteModal\" \n\t\t\t\t\t\t\tdata-id=\"").concat(person.id, "\" \n\t\t\t\t\t\t\tdata-fn=\"").concat(person.first_name, "\" \n\t\t\t\t\t\t\tdata-ln=\"").concat(person.last_name, "\">\n\t\t\t\t\t\t\tdelete\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t"));
       clearModal('create');
       $('#createModal').modal('hide');
       $('#status-alert .message').empty();
@@ -36519,15 +36518,15 @@ $(document).ready(function () {
   }); // edit modal
 
   $('#editModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
+    var button = event.relatedTarget; // Button that triggered the modal
     // var person = typeof button.data('info') === 'string' ? JSON.parse(button.data('info')) : button.data('info') // Extract info from data-* attributes // newly created entries are stringified
 
     var modal = $(this);
-    modal.find('#pbe-id').val(button.data('id'));
-    modal.find('#pbe-first_name').val(button.data('fn'));
-    modal.find('#pbe-last_name').val(button.data('ln'));
-    modal.find('#pbe-title').val(button.data('title'));
-    modal.find('#pbe-phone').val(button.data('phone'));
+    modal.find('#pbe-id').val(button.dataset.id);
+    modal.find('#pbe-first_name').val(button.dataset.fn);
+    modal.find('#pbe-last_name').val(button.dataset.ln);
+    modal.find('#pbe-title').val(button.dataset.title);
+    modal.find('#pbe-phone').val(button.dataset.phone);
   });
   $('#pbe-submit').click(function (e) {
     e.preventDefault();
@@ -36541,10 +36540,13 @@ $(document).ready(function () {
       $('#name-' + id).text("".concat(response.data.person.first_name, " ").concat(response.data.person.last_name));
       $('#title-' + id).text(response.data.person.title);
       $('#phone-' + id).text(response.data.person.formatted_phone);
-      $('#edit-btn_' + id).data('fn', response.data.person.first_name);
-      $('#edit-btn_' + id).data('ln', response.data.person.last_name);
-      $('#edit-btn_' + id).data('title', response.data.person.title);
-      $('#edit-btn_' + id).data('phone', response.data.person.phone);
+      $('#edit-btn_' + id).attr('data-fn', response.data.person.first_name);
+      $('#edit-btn_' + id).attr('data-ln', response.data.person.last_name);
+      $('#edit-btn_' + id).attr('data-title', response.data.person.title);
+      $('#edit-btn_' + id).attr('data-phone', response.data.person.phone);
+      $('#delete-btn_' + id).attr('data-id', response.data.person.id);
+      $('#delete-btn_' + id).attr('data-fn', response.data.person.first_name);
+      $('#delete-btn_' + id).attr('data-ln', response.data.person.last_name);
       clearModal('edit');
       $('#editModal').modal('hide');
       $('#status-alert .message').empty();
@@ -36558,6 +36560,26 @@ $(document).ready(function () {
         $('#pbe-errors ul').append("<li>".concat(errors.response.data.errors[_e2], "</li>"));
       }
     });
+  }); // delete modal
+
+  $('#deleteModal').on('show.bs.modal', function (event) {
+    var button = event.relatedTarget; // Button that triggered the modal
+
+    var modal = $(this);
+    var message = "<p>Are you sure you want to remove <strong>".concat(button.dataset.fn, " ").concat(button.dataset.ln, "</strong> from your phonebook?</p>");
+    modal.find('.modal-body').empty();
+    modal.find('.modal-body').prepend(message);
+    modal.find('#pbd-id').val(button.dataset.id);
+  });
+  $('#pbd-submit').click(function (e) {
+    var id = $('#pbd-id').val();
+    axios.delete('/delete-person/' + id).then(function (response) {
+      $('#deleteModal').modal('hide');
+      $('#contact-block_' + id).remove();
+      $('#status-alert .message').empty();
+      $('#status-alert').prepend("<span class=\"message\">".concat(response.data.status, "</span>"));
+      $('#status-alert').removeClass('d-none');
+    }).catch(function () {});
   });
   $('#createModal').on('hidden.bs.modal', function (e) {
     $('#pbc-errors').addClass('d-none');

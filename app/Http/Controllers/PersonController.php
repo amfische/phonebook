@@ -58,7 +58,7 @@ class PersonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Person $person)
     {
         $request->validate([
             'first_name' => 'bail|required',
@@ -69,7 +69,6 @@ class PersonController extends Controller
             'phone.digits' => 'The phone number must be 10 digits'
         ]);
 
-        $person = Person::find($id);
         $person->first_name = $request->first_name;
         $person->last_name = $request->last_name;
         $person->title = $request->title;
@@ -87,8 +86,9 @@ class PersonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Person $person)
     {
-        //
+        $person->delete();
+        return response()->json(['status' => 'Contact was successfully deleted'], 200);
     }
 }
