@@ -13,6 +13,6 @@
 
 
 Route::get('/', 'PersonController@index');
-Route::post('/store-person', 'PersonController@store')->name('person.store');
-Route::post('/update-person/{person}', 'PersonController@update')->name('person.update');
-Route::delete('/delete-person/{person}', 'PersonController@destroy');
+Route::post('/contact/create', 'PersonController@store')->name('contact.create');
+Route::put('/contact/{person}', 'PersonController@update')->name('contact.update');
+Route::delete('/contact/{person}', 'PersonController@destroy');

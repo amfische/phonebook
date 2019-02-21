@@ -19,7 +19,7 @@ class CreatePersonsTable extends Migration
             $table->string('last_name');
             $table->string('title');
             $table->string('phone');
-            $table->string('img_url')->nullable();
+            $table->string('avatar')->nullable();
             $table->timestamps();
         });
     }

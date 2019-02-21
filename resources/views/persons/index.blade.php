@@ -23,7 +23,11 @@
 	@endif
 	@foreach($persons as $person)
 		<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black" id="{{ 'contact-block_' . $person->id }}">
-			<img src="https://via.placeholder.com/65" alt="placeholder image">
+			@if(is_null($person->avatar))
+				<img src="https://via.placeholder.com/65" alt="placeholder image">
+			@else
+				<img src="{{ $person->avatar }}" alt="profile picture" style="height: 65px; width: 65px">
+			@endif
 			<div class="d-flex align-items-center justify-content-between flex-grow-1 px-4">
 				<div>
 					<h2 id="{{ 'name-' . $person->id }}" class="m-0">{{ $person->first_name . ' ' . $person->last_name }}</h2>

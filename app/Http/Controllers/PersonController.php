@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Person;
+use \Storage;
 
 class PersonController extends Controller
 {
@@ -17,6 +18,9 @@ class PersonController extends Controller
         $persons = Person::all();
         foreach ($persons as $p) {
             $p->formatted_phone = Person::formatPhoneNumber($p->phone);
+            if (!is_null($p->avatar)) {
+                $p->avatar = Storage::disk('public')->url('/avatars/' . $p->avatar);
+            }     
         }
         return view('persons.index', ['persons' => $persons]);
     }
@@ -33,7 +37,8 @@ class PersonController extends Controller
             'first_name' => 'bail|required',
             'last_name' => 'bail|required',
             'title' => 'bail|required',
-            'phone' => 'bail|required|numeric|digits:10'
+            'phone' => 'bail|required|numeric|digits:10',
+            'avatar' => 'bail|file|image'
         ], [
             'phone.digits' => 'The phone number must be 10 digits'
         ]);
@@ -44,6 +49,15 @@ class PersonController extends Controller
         $person->title = $request->title;
         $person->phone = $request->phone;
         $person->save();
+
+        if ($request->has('avatar')) {
+            $name = $person->id . '-' . $request->avatar->getClientOriginalName();
+            $request->file('avatar')->storeAs('avatars', $name, 'public');
+
+            $person->avatar = $name;
+            $person->save();
+        }
+        
 
         $person->formatted_phone = Person::formatPhoneNumber($person->phone);
 

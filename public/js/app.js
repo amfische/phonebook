@@ -36493,12 +36493,17 @@ $(document).ready(function () {
   // create modal
   $('#pbc-submit').click(function (e) {
     e.preventDefault();
-    axios.post('/store-person', {
-      first_name: $('#pbc-first_name').val(),
-      last_name: $('#pbc-last_name').val(),
-      title: $('#pbc-title').val(),
-      phone: $('#pbc-phone').val()
-    }).then(function (response) {
+    var data = new FormData();
+    data.set('first_name', $('#pbc-first_name').val());
+    data.set('last_name', $('#pbc-last_name').val());
+    data.set('title', $('#pbc-title').val());
+    data.set('phone', $('#pbc-phone').val());
+
+    if (document.querySelector('#pbc-image').files[0] !== undefined) {
+      data.set('avatar', document.querySelector('#pbc-image').files[0]);
+    }
+
+    axios.post('/contact/create', data).then(function (response) {
       var person = response.data.person;
       $('main').append("\n\t\t\t\t<div class=\"media align-items-center justify-content-between pb-3 mb-5\" style=\"border-bottom: 1px solid black\" id=\"contact-block_".concat(person.id, "\">\n\t\t\t\t\t<img src=\"https://via.placeholder.com/65\" alt=\"placeholder image\">\n\t\t\t\t\t<div class=\"d-flex align-items-center justify-content-between flex-grow-1 px-4\">\n\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t<h2 id=\"name-").concat(person.id, "\" class=\"m-0\">").concat(person.first_name, " ").concat(person.last_name, "</h2>\n\t\t\t\t\t\t\t<p id=\"title-").concat(person.id, "\" class=\"m-0\">").concat(person.title, "</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p id=\"phone-").concat(person.id, "\" class=\"m-0 px-5\" style=\"font-size: 2rem;\">").concat(person.formatted_phone, "</p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<button \n\t\t\t\t\t\t\tclass=\"btn btn-sm btn-info mx-2 px-4\" \n\t\t\t\t\t\t\tdata-toggle=\"modal\" data-target=\"#editModal\" \n\t\t\t\t\t\t\tdata-id=\"").concat(person.id, "\"\n\t\t\t\t\t\t\tdata-fn=\"").concat(person.first_name, "\"\n\t\t\t\t\t\t\tdata-ln=\"").concat(person.last_name, "\"\n\t\t\t\t\t\t\tdata-title=\"").concat(person.title, "\"\n\t\t\t\t\t\t\tdata-phone=\"").concat(person.phone, "\">\n\t\t\t\t\t\t\tedit\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<button \n\t\t\t\t\t\t\tclass=\"btn btn-sm btn-danger mx-2 px-4\" \n\t\t\t\t\t\t\tdata-toggle=\"modal\" data-target=\"#deleteModal\" \n\t\t\t\t\t\t\tdata-id=\"").concat(person.id, "\" \n\t\t\t\t\t\t\tdata-fn=\"").concat(person.first_name, "\" \n\t\t\t\t\t\t\tdata-ln=\"").concat(person.last_name, "\">\n\t\t\t\t\t\t\tdelete\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t"));
       clearModal('create');
@@ -36531,7 +36536,7 @@ $(document).ready(function () {
   $('#pbe-submit').click(function (e) {
     e.preventDefault();
     var id = $('#pbe-id').val();
-    axios.post('/update-person/' + id, {
+    axios.put('/contact/' + id, {
       first_name: $('#pbe-first_name').val(),
       last_name: $('#pbe-last_name').val(),
       title: $('#pbe-title').val(),
@@ -36573,7 +36578,7 @@ $(document).ready(function () {
   });
   $('#pbd-submit').click(function (e) {
     var id = $('#pbd-id').val();
-    axios.delete('/delete-person/' + id).then(function (response) {
+    axios.delete('/contact/' + id).then(function (response) {
       $('#deleteModal').modal('hide');
       $('#contact-block_' + id).remove();
       $('#status-alert .message').empty();

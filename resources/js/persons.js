@@ -3,12 +3,17 @@ $(document).ready(function() {
 	// create modal
 	$('#pbc-submit').click((e) => {
 		e.preventDefault();
-		axios.post('/store-person', {
-			first_name: $('#pbc-first_name').val(),
-			last_name: $('#pbc-last_name').val(),
-			title: $('#pbc-title').val(),
-			phone: $('#pbc-phone').val()
-		})
+
+		let data = new FormData()
+		data.set('first_name', $('#pbc-first_name').val())
+		data.set('last_name', $('#pbc-last_name').val())
+		data.set('title', $('#pbc-title').val())
+		data.set('phone', $('#pbc-phone').val())
+		if (document.querySelector('#pbc-image').files[0] !== undefined) {
+			data.set('avatar', document.querySelector('#pbc-image').files[0])
+		}
+
+		axios.post('/contact/create', data)
 		.then(response => {
 			const person = response.data.person
 			$('main').append(
@@ -79,7 +84,7 @@ $(document).ready(function() {
 	$('#pbe-submit').click((e) => {
 		e.preventDefault();
 		let id = $('#pbe-id').val()
-		axios.post('/update-person/' + id, {
+		axios.put('/contact/' + id, {
 			first_name: $('#pbe-first_name').val(),
 			last_name: $('#pbe-last_name').val(),
 			title: $('#pbe-title').val(),
@@ -127,7 +132,7 @@ $(document).ready(function() {
 
 	$('#pbd-submit').click((e) => {
 		let id = $('#pbd-id').val()
-		axios.delete('/delete-person/' + id)
+		axios.delete('/contact/' + id)
 		.then(response => {
 			$('#deleteModal').modal('hide');
 			$('#contact-block_' + id).remove();
