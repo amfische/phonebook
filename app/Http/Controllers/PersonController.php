@@ -19,9 +19,11 @@ class PersonController extends Controller
         foreach ($persons as $p) {
             $p->formatted_phone = Person::formatPhoneNumber($p->phone);
             if (!is_null($p->avatar)) {
+                $p->file = base64_encode(Storage::get('./public/avatars/' . $p->avatar));
                 $p->avatar = Storage::disk('public')->url('/avatars/' . $p->avatar);
             }     
         }
+        return response()->json(['persons' => $persons], 200);
         return view('persons.index', ['persons' => $persons]);
     }
 
@@ -60,8 +62,9 @@ class PersonController extends Controller
         
 
         $person->formatted_phone = Person::formatPhoneNumber($person->phone);
+        $flash_message = $person->first_name . ' ' . $person->last_name . ' has been successfully added to the phonebook!';
 
-        return response()->json([ 'status' => $person->first_name . ' ' . $person->last_name . ' was successfully added to the phonebook!', 'person' => $person], 200);
+        return response()->json(['message' => $flash_message], 200);
 
     }
 
@@ -102,7 +105,11 @@ class PersonController extends Controller
      */
     public function destroy(Person $person)
     {
+        $flash_message = $person->first_name . ' ' . $person->last_name . ' has been successfully deleted from the phonebook.';
+        if (!is_null($person->avatar)) {
+            Storage::disk('public')->delete('/avatars/' . $person->avatar);
+        } 
         $person->delete();
-        return response()->json(['status' => 'Contact was successfully deleted'], 200);
+        return response()->json(['message' => $flash_message], 200);
     }
 }

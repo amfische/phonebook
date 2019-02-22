@@ -22,7 +22,7 @@
 		</div>
 	@endif
 	@foreach($persons as $person)
-		<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black" id="{{ 'contact-block_' . $person->id }}">
+		<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black">
 			@if(is_null($person->avatar))
 				<img src="https://via.placeholder.com/65" alt="placeholder image">
 			@else
@@ -43,7 +43,8 @@
 					data-fn="{{ $person->first_name }}"
 					data-ln="{{ $person->last_name }}"
 					data-title="{{ $person->title }}"
-					data-phone="{{ $person->phone }}">
+					data-phone="{{ $person->phone }}"
+					data-image="{{ $person->file }}">
 					edit
 				</button>
 				<button 

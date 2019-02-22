@@ -1,5 +1,18 @@
 $(document).ready(function() {
 
+	function toggleAlert(message) {
+		$('#status-alert .message').empty();
+		$('#status-alert').prepend(`<span class="message">${message}</span>`);
+		$('#status-alert').removeClass('d-none');
+	}
+
+	//check session storage for flash messages
+	let flash_message = JSON.parse(sessionStorage.getItem('pb.flash.message'))
+	if (flash_message) {
+		sessionStorage.removeItem('pb.flash.message')
+		toggleAlert(flash_message)
+	}
+
 	// create modal
 	$('#pbc-submit').click((e) => {
 		e.preventDefault();
@@ -15,49 +28,8 @@ $(document).ready(function() {
 
 		axios.post('/contact/create', data)
 		.then(response => {
-			const person = response.data.person
-			$('main').append(
-				`
-				<div class="media align-items-center justify-content-between pb-3 mb-5" style="border-bottom: 1px solid black" id="contact-block_${person.id}">
-					<img src="https://via.placeholder.com/65" alt="placeholder image">
-					<div class="d-flex align-items-center justify-content-between flex-grow-1 px-4">
-						<div>
-							<h2 id="name-${person.id}" class="m-0">${person.first_name} ${person.last_name}</h2>
-							<p id="title-${person.id}" class="m-0">${person.title}</p>
-						</div>
-						<p id="phone-${person.id}" class="m-0 px-5" style="font-size: 2rem;">${person.formatted_phone}</p>
-					</div>
-					<div>
-						<button 
-							class="btn btn-sm btn-info mx-2 px-4" 
-							data-toggle="modal" data-target="#editModal" 
-							data-id="${ person.id }"
-							data-fn="${ person.first_name }"
-							data-ln="${ person.last_name }"
-							data-title="${ person.title }"
-							data-phone="${ person.phone }">
-							edit
-						</button>
-						<button 
-							class="btn btn-sm btn-danger mx-2 px-4" 
-							data-toggle="modal" data-target="#deleteModal" 
-							data-id="${ person.id }" 
-							data-fn="${ person.first_name }" 
-							data-ln="${ person.last_name }">
-							delete
-						</button>
-					</div>
-				</div>
-				`)
-
-			clearModal('create')
-			$('#createModal').modal('hide');
-
-			$('#status-alert .message').empty();
-			$('#status-alert').prepend(`<span class="message">${response.data.status}</span>`);
-			$('#status-alert').removeClass('d-none');
-
-			$('main > .alert').addClass('d-none');
+			sessionStorage.setItem('pb.flash.message', response.data.message)
+			window.location.reload()
 		})
 		.catch(errors => {
 			$('#pbc-errors ul').empty();
@@ -104,12 +76,8 @@ $(document).ready(function() {
 			$('#delete-btn_' + id).attr('data-fn', response.data.person.first_name)
 			$('#delete-btn_' + id).attr('data-ln', response.data.person.last_name)
 
-			clearModal('edit')
 			$('#editModal').modal('hide');
-
-			$('#status-alert .message').empty();
-			$('#status-alert').prepend(`<span class="message">${response.data.status}</span>`);
-			$('#status-alert').removeClass('d-none');
+			toggleAlert(response.data.status);
 		})
 		.catch(errors => {
 			$('#pbe-errors ul').empty();
@@ -134,11 +102,8 @@ $(document).ready(function() {
 		let id = $('#pbd-id').val()
 		axios.delete('/contact/' + id)
 		.then(response => {
-			$('#deleteModal').modal('hide');
-			$('#contact-block_' + id).remove();
-			$('#status-alert .message').empty();
-			$('#status-alert').prepend(`<span class="message">${response.data.status}</span>`);
-			$('#status-alert').removeClass('d-none');
+			sessionStorage.setItem('pb.flash.message',  response.data.message)
+			window.location.reload()
 		})
 		.catch(() => {
 
@@ -155,23 +120,11 @@ $(document).ready(function() {
 		$('#pbe-errors ul').empty();
 	})
 
-	function clearModal(type) {
-		if (type === 'create') {
-			$('#pbc-first_name').val('');
-			$('#pbc-last_name').val('');
-			$('#pbc-title').val('');
-			$('#pbc-phone').val('');
-		} else if (type === 'edit') {
-			$('#pbe-first_name').val('');
-			$('#pbe-last_name').val('');
-			$('#pbe-title').val('');
-			$('#pbe-phone').val('');
-		}
-	}
-
 	// status alert
 	$('#status-alert button').on('click', () => {
 		$('#status-alert').addClass('d-none');
 	})
+
+
 
 })
