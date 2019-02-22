@@ -15,3 +15,16 @@ if (flash_message) {
 $('#status-alert button').on('click', () => {
 	$('#status-alert').addClass('d-none');
 })
+
+
+// show image preview when uploading file
+const _createFile = document.querySelector('#pbc-upload')
+const _editFile = document.querySelector('#pbe-upload')
+
+_createFile.addEventListener('change', loadImagePreview)
+_editFile.addEventListener('change', loadImagePreview)
+
+function loadImagePreview(e) {
+	let img = e.target.parentElement.nextElementSibling
+	img.src = URL.createObjectURL(e.target.files[0])
+}

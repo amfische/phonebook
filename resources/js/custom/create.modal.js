@@ -1,6 +1,12 @@
 $('#createModal').on('hidden.bs.modal', (e) => {
 	$('#pbc-errors').addClass('d-none');
 	$('#pbc-errors ul').empty();
+	$('#pbc-first_name').val('');
+	$('#pbc-last_name').val('');
+	$('#pbc-title').val('');
+	$('#pbc-phone').val('');
+	$('#pbc-upload').val('');
+	$('#createModal img').attr('src', 'https://via.placeholder.com/65');
 })
 
 $('#pbc-submit').click((e) => {
@@ -11,8 +17,8 @@ $('#pbc-submit').click((e) => {
 	data.set('last_name', $('#pbc-last_name').val())
 	data.set('title', $('#pbc-title').val())
 	data.set('phone', $('#pbc-phone').val())
-	if (document.querySelector('#pbc-image').files[0] !== undefined) {
-		data.set('avatar', document.querySelector('#pbc-image').files[0])
+	if (document.querySelector('#pbc-upload').files[0] !== undefined) {
+		data.set('avatar', document.querySelector('#pbc-upload').files[0])
 	}
 
 	axios.post('/contact/create', data)

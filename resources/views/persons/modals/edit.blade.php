@@ -27,9 +27,12 @@
             <label for="pbe-phone">Phone Number</label>
             <input type="text" name="phone" class="form-control" id="pbe-phone">
           </div>
-          <div class="form-group">
-            <label for="pbe-image">Avatar Image</label>
-            <input type="file" name="image" class="custom-file-input" id="pbe-image" style="opacity: 1;">
+          <div class="form-group d-flex pr-3">
+            <div>
+              <label for="pbe-upload">Avatar Image</label>
+              <input type="file" name="image" class="custom-file-input" id="pbe-upload" style="opacity: 1;">  
+            </div>            
+            <img src="https://via.placeholder.com/65" alt="placeholder image" style="height: 65px; width: 65px">
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary" id="pbe-submit">Update</button>

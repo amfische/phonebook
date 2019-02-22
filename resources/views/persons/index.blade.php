@@ -30,10 +30,10 @@
 			@endif
 			<div class="d-flex align-items-center justify-content-between flex-grow-1 px-4">
 				<div>
-					<h2 id="{{ 'name-' . $person->id }}" class="m-0">{{ $person->first_name . ' ' . $person->last_name }}</h2>
-					<p id="{{ 'title-' . $person->id }}" class="m-0">{{ $person->title }}</p>
+					<h2 class="m-0">{{ $person->first_name . ' ' . $person->last_name }}</h2>
+					<p class="m-0">{{ $person->title }}</p>
 				</div>
-				<p id="{{ 'phone-' . $person->id }}" class="m-0 px-5" style="font-size: 2rem;">{{ $person->formatted_phone }}</p>
+				<p class="m-0 px-5" style="font-size: 2rem;">{{ $person->formatted_phone }}</p>
 			</div>
 			<div>
 				<button 
@@ -44,7 +44,7 @@
 					data-ln="{{ $person->last_name }}"
 					data-title="{{ $person->title }}"
 					data-phone="{{ $person->phone }}"
-					data-image="{{ $person->file }}">
+					data-avatar="{{ $person->avatar }}">
 					edit
 				</button>
 				<button 
