@@ -36397,6 +36397,8 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 __webpack_require__(/*! ./custom/main */ "./resources/js/custom/main.js");
 
+__webpack_require__(/*! ./custom/search */ "./resources/js/custom/search.js");
+
 __webpack_require__(/*! ./custom/create.modal */ "./resources/js/custom/create.modal.js");
 
 __webpack_require__(/*! ./custom/edit.modal */ "./resources/js/custom/edit.modal.js");
@@ -36628,6 +36630,32 @@ function loadImagePreview(e) {
   var img = e.target.parentElement.nextElementSibling;
   img.src = URL.createObjectURL(e.target.files[0]);
 }
+
+/***/ }),
+
+/***/ "./resources/js/custom/search.js":
+/*!***************************************!*\
+  !*** ./resources/js/custom/search.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var searchInput = document.querySelector('.search-and-create').firstElementChild;
+var peoplesArray = document.querySelectorAll('.name-and-title');
+searchInput.addEventListener('keyup', function (e) {
+  peoplesArray.forEach(function (person) {
+    var container = person.parentElement.parentElement;
+    var name = person.firstElementChild.innerText.toLowerCase();
+    var title = person.lastElementChild.innerText.toLowerCase();
+    var searchTerm = e.target.value.toLowerCase();
+
+    if (!name.includes(searchTerm) && !title.includes(searchTerm)) {
+      container.classList.add('d-none');
+    } else {
+      container.classList.remove('d-none');
+    }
+  });
+});
 
 /***/ }),
 
