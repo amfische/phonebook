@@ -31,7 +31,7 @@
               <label for="pbc-upload">Avatar Image</label>
               <input type="file" name="image" class="custom-file-input" id="pbc-upload" style="opacity: 1;">  
             </div>            
-            <img src="https://via.placeholder.com/65" alt="placeholder image" style="height: 65px; width: 65px">
+            <img src="https://via.placeholder.com/85" alt="placeholder image" style="height: 85px; width: 85px">
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary" id="pbc-submit">Add Person</button>

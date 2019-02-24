@@ -6,7 +6,7 @@ $('#createModal').on('hidden.bs.modal', (e) => {
 	$('#pbc-title').val('');
 	$('#pbc-phone').val('');
 	$('#pbc-upload').val('');
-	$('#createModal img').attr('src', 'https://via.placeholder.com/65');
+	$('#createModal img').attr('src', 'https://via.placeholder.com/85');
 })
 
 $('#pbc-submit').click((e) => {

@@ -10491,6 +10491,60 @@ a.text-dark:focus {
   }
 }
 
+.app-title {
+  font-size: 1.75rem;
+}
+
+.name-and-title h2 {
+  font-size: 1rem;
+}
+
+.name-and-title p {
+  font-size: 0.75rem;
+}
+
+.phone-number {
+  font-size: 1.25rem;
+}
+
+@media screen and (min-width: 992px) {
+  .app-title {
+    font-size: 2.25rem;
+  }
+
+  .name-and-title {
+    max-width: 40%;
+  }
+
+  .name-and-title h2 {
+    font-size: 2rem;
+  }
+
+  .name-and-title p {
+    font-size: 1rem;
+  }
+
+  .phone-number {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .name-and-title {
+    max-width: 55%;
+  }
+}
+
+.search-and-create input {
+  width: 80%;
+}
+
+@media screen and (min-width: 992px) {
+  .search-and-create input {
+    width: 50%;
+  }
+}
+
 .navbar-laravel {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);

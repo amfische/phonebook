@@ -1,0 +1,12 @@
+.search-and-create {
+	input {
+		width: 80%;
+	}
+}
+@media screen and (min-width: 992px) {
+	.search-and-create {
+		input {
+			width: 50%;
+		}
+	}
+}

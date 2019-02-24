@@ -36478,7 +36478,7 @@ $('#createModal').on('hidden.bs.modal', function (e) {
   $('#pbc-title').val('');
   $('#pbc-phone').val('');
   $('#pbc-upload').val('');
-  $('#createModal img').attr('src', 'https://via.placeholder.com/65');
+  $('#createModal img').attr('src', 'https://via.placeholder.com/85');
 });
 $('#pbc-submit').click(function (e) {
   e.preventDefault();
@@ -36558,7 +36558,7 @@ $('#editModal').on('hidden.bs.modal', function (e) {
   $('#pbe-errors').addClass('d-none');
   $('#pbe-errors ul').empty();
   $('#pbe-upload').val('');
-  $('#editModal img').attr('src', 'https://via.placeholder.com/65');
+  $('#editModal img').attr('src', 'https://via.placeholder.com/85');
 });
 $('#pbe-submit').click(function (e) {
   e.preventDefault();
